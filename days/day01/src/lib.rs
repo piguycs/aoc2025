@@ -1,9 +1,22 @@
+mod part2;
+
 pub fn solution_part1(actions: &[Action], start: usize) -> usize {
     let mut dial = Dial::<99>::new(start);
     let mut zeros = 0;
 
     for action in actions {
         zeros += dial.apply(action) as usize;
+    }
+
+    zeros
+}
+
+pub fn solution_part2(actions: &[Action], start: usize) -> usize {
+    let mut dial = Dial::<99>::new(start);
+    let mut zeros = 0;
+
+    for action in actions {
+        zeros += dial.apply_part2(action);
     }
 
     zeros
@@ -21,31 +34,28 @@ impl<const MAX: usize> Dial<MAX> {
 
     /// apply a rotation action, and return true if the inner value is set to 0
     pub fn apply(&mut self, action: &Action) -> bool {
-        eprint!("{} + {}", self.inner, action);
         self.inner = match action.movement {
             Movement::Left => wrapping_sub::<MAX>(self.inner, action.steps),
             Movement::Right => wrapping_add::<MAX>(self.inner, action.steps),
         };
-        eprintln!(" -> {}", self.inner);
 
         self.inner == 0
     }
 }
 
 fn wrapping_add<const MAX: usize>(a: usize, b: usize) -> usize {
-    let max_inclusive = MAX + 1;
-
-    (a + b) % max_inclusive
+    let max_exclusive = MAX + 1;
+    (a + b) % max_exclusive
 }
 
 fn wrapping_sub<const MAX: usize>(a: usize, mut b: usize) -> usize {
-    let max_inclusive = MAX + 1;
+    let max_exclusive = MAX + 1;
 
     while b > MAX {
-        b -= max_inclusive
+        b -= max_exclusive
     }
 
-    (a + MAX + 1 - b) % max_inclusive
+    (a + MAX + 1 - b) % max_exclusive
 }
 
 pub struct Action {
