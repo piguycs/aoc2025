@@ -50,18 +50,22 @@ mod test {
     #[test]
     // building on top of the previous test to test more maths
     fn more_maths_ops_test() {
-        let (a, b) = get_half_nums(1234);
-        assert_eq!(a, 12);
-        assert_eq!(b, 34);
-        let (a, b) = get_half_nums(12345678);
-        assert_eq!(a, 1234);
-        assert_eq!(b, 5678);
+        let mut buffer = String::with_capacity(1024);
+
+        let (a, b) = get_half_nums(1234, &mut buffer);
+        assert_eq!(a, "12");
+        assert_eq!(b, "34");
+        let (a, b) = get_half_nums(12345678, &mut buffer);
+        assert_eq!(a, "1234");
+        assert_eq!(b, "5678");
     }
 
     #[test]
     // realised this would be a failing case for p1
     fn failing_case_p1() {
-        let (a, b) = get_half_nums(1001);
-        assert_eq!(a, b);
+        let mut buffer = String::with_capacity(1024);
+        let (a, b) = get_half_nums(1001, &mut buffer);
+        assert_eq!(a, "10");
+        assert_eq!(b, "01");
     }
 }
